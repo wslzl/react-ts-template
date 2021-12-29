@@ -1,0 +1,75 @@
+@charset "utf-8";
+
+$position: (
+  t: top,
+  r: right,
+  b: bottom,
+  l: left,
+);
+
+@for $i from 1 through 10 {
+  @each $key, $value in $position {
+    .p#{$key}-#{$i * 4} {
+      padding-#{$value}: $i * 4px;
+    }
+    .m#{$key}-#{$i * 4} {
+      margin-#{$value}: $i * 4px;
+    }
+  }
+}
+
+// font 12 - 60 px
+@for $i from 0 through 24 {
+  .f-#{$i * 2 + 12} {
+    font-size: $i * 2 + 12px;
+  }
+}
+
+// flex
+.flex {
+  display: flex;
+  &.vertical {
+    flex-direction: column;
+  }
+  &.space-bt {
+    justify-content: space-between;
+  }
+  &.space-around {
+    justify-content: space-around;
+  }
+  &.align-center {
+    align-items: center;
+  }
+  &.justify-center {
+    justify-content: center;
+  }
+  .flex-1 {
+    flex: 1;
+  }
+}
+
+// 清除浮动
+%clearfix {
+  &::before,
+  &::after {
+    content: "";
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
+}
+
+// 扩展点击区域
+%extend-click {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+  }
+}

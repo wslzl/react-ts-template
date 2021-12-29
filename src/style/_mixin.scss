@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin ellipsis($lines: 1, $substract: 0) {
+  @if $lines==1 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100% - $substract;
+    overflow: hidden;
+  } @else {
+    overflow: hidden;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    // word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lines;
+  }
+}
+
+@mixin triangle($direction: top, $border-width: 6px, $border-color) {
+  content: "";
+  width: 0;
+  height: 0;
+  overflow: hidden;
+
+  @if $direction == top {
+    border-bottom: $border-width solid $border-color;
+    border-left: $border-width dashed transparent;
+    border-right: $border-width dashed transparent;
+  } @else if $direction == right {
+    border-left: $border-width solid $border-color;
+    border-top: $border-width dashed transparent;
+    border-bottom: $border-width dashed transparent;
+  } @else if $direction == bottom {
+    border-top: $border-width solid $border-color;
+    border-left: $border-width dashed transparent;
+    border-right: $border-width dashed transparent;
+  } @else if $direction == left {
+    border-right: $border-width solid $border-color;
+    border-top: $border-width dashed transparent;
+    border-bottom: $border-width dashed transparent;
+  }
+}
+
+// disabled
+@mixin disabled($text-color, $bg-color, $bd-color: false) {
+  background-color: $bg-color;
+  color: $text-color;
+  cursor: default !important;
+  pointer-events: none !important;
+  @if $bd-color {
+    border: 1px solid $text-color;
+  }
+}
+
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transtion: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin animation($content) {
+  -webkit-animation: #{$content};
+  -moz-animation: #{$content};
+  -ms-animation: #{$content};
+  -o-animation: #{$content};
+  animation: #{$content};
+}
+
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
