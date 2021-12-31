@@ -69,7 +69,14 @@ module.exports = function () {
           exclude: /node_modules/,
         },
         {
-          test: /\.svg/,
+          test: /\.wasm$/,
+          type: "webassembly/async",
+          generator: {
+            filename: "static/[name].wasm",
+          },
+        },
+        {
+          test: /\.svg$/,
           type: "asset/inline",
         },
         {
@@ -127,10 +134,14 @@ module.exports = function () {
       }),
     ].filter(Boolean),
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".json", ".wasm"],
       alias: {
         "@": resolvePath("../src/"),
       },
+    },
+    experiments: {
+      asyncWebAssembly: true,
+      syncWebAssembly: true,
     },
     devServer: {
       compress: true,
@@ -144,6 +155,10 @@ module.exports = function () {
       minimizer: [new TerserWebpackPlugin()],
       splitChunks: {
         chunks: "all",
+        minSize: {
+          javascript: 30000,
+          webassembly: 50000,
+        },
       },
     },
   };

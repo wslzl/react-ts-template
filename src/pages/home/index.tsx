@@ -2,6 +2,8 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserInfo } from "@/store/actions";
 
+import * as wasm from "@/wasm/demo.wasm";
+
 function Home() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: any) => {
@@ -9,6 +11,7 @@ function Home() {
   });
   const updateUser = () => {
     dispatch(updateUserInfo({ id: 1, name: "xxx" }));
+    console.log(wasm.doSome(1, 4));
   };
 
   return (
