@@ -1,6 +1,19 @@
 import { createStore } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import storageSession from "redux-persist/lib/storage/session";
+
 import rootReducer from "./reducers";
 
-const store = createStore(rootReducer);
+const persistConfig = {
+  key: "root",
+  storage: storageSession,
+  whitelist: ["userReducer"],
+};
 
-export default store;
+const persist = persistReducer(persistConfig, rootReducer);
+
+const store = createStore(persist);
+
+const persistor = persistStore(store);
+
+export { store, persistor };

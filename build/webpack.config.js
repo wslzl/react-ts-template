@@ -34,7 +34,7 @@ module.exports = function () {
     ].filter(Boolean);
   };
   return {
-    mode: "development",
+    mode: isProduction ? "production" : "development",
     stats: isProduction ? "" : "errors-only",
     entry: resolvePath("../src/index.tsx"),
     output: {
@@ -45,6 +45,7 @@ module.exports = function () {
       chunkFilename: isProduction
         ? "js/[name].[contenthash:8].chunk.js"
         : "js/[name].chunk.js",
+      webassemblyModuleFilename: "static/[hash].wasm",
     },
     module: {
       rules: [
@@ -71,9 +72,6 @@ module.exports = function () {
         {
           test: /\.wasm$/,
           type: "webassembly/async",
-          generator: {
-            filename: "static/[name].wasm",
-          },
         },
         {
           test: /\.svg$/,
@@ -145,6 +143,7 @@ module.exports = function () {
     },
     devServer: {
       compress: true,
+      historyApiFallback: true,
       host: "127.0.0.1",
       hot: true,
       open: true,
