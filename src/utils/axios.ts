@@ -1,43 +1,35 @@
-import Axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-
-type Method = "GET" | "POST" | "PUT" | "DELETE";
-
-interface AxiosRequest {
-  baseUrl?: string;
-  url?: string;
-  methods?: Method;
-  data?: any;
-  params?: any;
-  headers?: any;
-  timeout?: number;
-}
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 class HttpRequest {
-  private baseURL: string;
-  private timeout: number;
+  private axiosInstance: AxiosInstance;
 
-  constructor(url: string) {
-    this.baseURL = url;
-    this.timeout = 10000;
+  constructor(baseURL: string) {
+    this.axiosInstance = axios.create({
+      baseURL: baseURL,
+      timeout: 5000,
+    });
   }
 
-  interceptors(instance: AxiosInstance, url: string): void {
-    instance.interceptors.request.use(
-      (config) => {
-        // config.header.AuthorizationToken = "";
+  private interceptors(): void {
+    this.axiosInstance.interceptors.request.use(
+      (config: AxiosRequestConfig) => {
+        if (config.url !== "/login") {
+          // config.headers!["Authorization"] = user.access_token;
+        }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error: any) => {
+        Promise.reject(error);
+      }
     );
-    instance.interceptors.response.use(
-      (response) => {
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse) => {
         if (response.status === 200) {
-          return Promise.resolve(response);
-        } else {
-          return Promise.reject(response);
+          return response;
         }
+        return Promise.reject(response);
       },
-      (error) => {
+      (error: any) => {
         if (error.response) {
           switch (error.response.status) {
             case 401:
@@ -51,36 +43,24 @@ class HttpRequest {
             default:
               break;
           }
-          return Promise.reject(error);
         }
+        return Promise.reject(error);
       }
     );
   }
-
-  request = (options: AxiosRequestConfig) => {
-    const instance = Axios.create();
-    const config = {
-      ...options,
-      baseURL: this.baseURL,
-      timeout: this.timeout,
-    };
-    this.interceptors(instance, options.url);
-    return instance(config);
-  };
-
-  get(config: object) {
-    const conf: AxiosRequest = {
-      ...config,
-      methods: "GET",
-    };
-    return this.request(conf);
+  private request(options: AxiosRequestConfig): Promise<AxiosResponse> {
+    this.interceptors();
+    return this.axiosInstance(options);
   }
-  post(config) {
-    const conf = {
+  public get(config: AxiosRequestConfig): Promise<AxiosResponse> {
+    return this.request({ ...config, method: "GET" });
+  }
+  public post(config: AxiosRequestConfig): Promise<AxiosResponse> {
+    return this.request({
       ...config,
-      methods: "POST",
-    };
-    return this.request(conf);
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
