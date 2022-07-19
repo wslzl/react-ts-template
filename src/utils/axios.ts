@@ -19,6 +19,7 @@ class HttpRequest {
         return config;
       },
       (error: any) => {
+        console.log({ e1: error });
         Promise.reject(error);
       }
     );
